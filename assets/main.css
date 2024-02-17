@@ -1,9 +1,60 @@
 @import url('inter-font/inter.css');
 
-body {
+html, body {
     font-family: 'Inter', sans-serif;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
 }
 
-h1 {
-    color: blue;
+main {
+    padding: 1rem;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+form li + li {
+    margin-top: 1rem;
+}
+
+label {
+    font-size: small;
+    color: gray;
+}
+
+input {
+    min-height: 1.5rem;
+}
+
+.expenses-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr;
+    align-items: center;
+}
+
+.create-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr;
+    align-items: center;
+}
+
+textarea {
+    resize: none;
+}
+
+button {
+    padding: 1rem; /* Adjust padding as needed */
+}
+
+.input-item {
+    display: flex;
+    flex-direction: column;
 }
