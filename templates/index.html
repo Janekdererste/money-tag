@@ -1,18 +1,25 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
     <link href="/assets/main.css" rel="stylesheet"/>
     <title>Index Test Page</title>
+    <style>
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: start;
+            gap: 1rem;
+        }
+    </style>
 </head>
 <body>
-<main class="expenses-layout">
-    <h1>Your Expenses</h1>
-    <a href="/create"><button class="new-item">Create</button></a>
-    <ul>
-        {% for record in records %}
-        <li>{{ record.title }}</li>
-        {% endfor %}
-    </ul>
+<header>
+    <h1>The Expense List</h1>
+</header>
+<main class="main-layout">
+    {% include "records.html" %}
+    {% include "create-record.html" %}
 
 </main>
 </body>

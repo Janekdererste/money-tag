@@ -7,7 +7,6 @@ use askama::Template;
 use askama_axum::IntoResponse;
 use axum::extract::State;
 use axum::http::StatusCode;
-use axum::response::Redirect;
 use axum::routing::{get, post};
 use axum::{Form, Router};
 use clap::Parser;
@@ -41,8 +40,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     info!("Configuring Router.");
     let router = Router::new()
         .route("/", get(index))
-        .route("/create", get(create_record))
-        .route("/handle-create", post(handle_create))
+        .route("/create", post(create))
         .nest_service("/assets", ServeDir::new("assets"))
         .layer(TraceLayer::new_for_http())
         .with_state(app_state);
@@ -66,31 +64,34 @@ async fn index<'a>(State(state): State<AppState>) -> impl IntoResponse {
     }
 }
 
-async fn create_record() -> CreateRecordTemplate {
-    CreateRecordTemplate
-}
-
-async fn handle_create(
+async fn create(
     State(state): State<AppState>,
     Form(data): Form<NewRecordForm>,
 ) -> impl IntoResponse {
-    let re = Regex::new(r"[ ,;]").unwrap(); // Pattern matches space, comma, or semicolon
-    let bla: Vec<String> = re
+    // process the form. This should probably also have validation
+    let regex = Regex::new(r"[,;]").unwrap(); // this doesn't have to be created each time i guess
+    let tags: Vec<_> = regex
         .split(data.tag.as_str())
         .map(|part| part.to_owned())
         .collect();
+
+    // create a db record and add it to the db.
     let new_record = Record {
-        owner: String::from("default"),
-        title: data.title.clone(),
+        owner: "default".to_owned(), // this should be a user at some point
+        title: data.title.to_owned(),
         amount: data.amount,
-        tags: bla,
+        tags,
     };
 
     match state.db.add_record(new_record).await {
-        Ok(_) => Redirect::to("/").into_response(),
-        Err(err) => (
+        // return updated list in case of success
+        Ok(_) => {
+            let records = state.db.records("default").await.expect("Failed to load records from the database. Replace this with proper generic error handler");
+            (StatusCode::OK, RecordList { records }).into_response()
+        }
+        Err(e) => (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Error adding record: {err}"),
+            format!("Database error: {e}"),
         )
             .into_response(),
     }
@@ -103,8 +104,10 @@ struct IndexTemplate {
 }
 
 #[derive(Template)]
-#[template(path = "create-record.html")]
-struct CreateRecordTemplate;
+#[template(path = "records.html")]
+struct RecordList {
+    records: Vec<Record>,
+}
 
 #[derive(Deserialize, Clone, Debug)]
 struct NewRecordForm {

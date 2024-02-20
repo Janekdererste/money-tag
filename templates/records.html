@@ -1,0 +1,21 @@
+<style>
+
+    .list-item {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto;
+        padding: 0 1rem 1rem 1rem;
+        border-bottom: solid 1px #dee3ed;
+    }
+
+    .list-item ~ .list-item {
+        margin: 1rem 0 0 0;
+    }
+</style>
+<ul id="record-list">
+{% for record in records %}
+<li class="list-item">
+    <span>{{record.title}}</span>
+    <span>{{record.amount}}€</span></li>
+{% endfor %}
+</ul>

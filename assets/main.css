@@ -18,11 +18,6 @@ ul {
     margin: 0;
 }
 
-
-form li + li {
-    margin-top: 1rem;
-}
-
 label {
     font-size: small;
     color: gray;
@@ -32,29 +27,38 @@ input {
     min-height: 1.5rem;
 }
 
-.expenses-layout {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto 1fr;
-    align-items: center;
-}
-
-.create-layout {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto 1fr;
-    align-items: center;
-}
-
-textarea {
-    resize: none;
-}
-
 button {
-    padding: 1rem; /* Adjust padding as needed */
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+ button:hover {
+     color: #fff;
+     background-color: #218838;
+     border-color: #1e7e34;
+     text-decoration: none;
+ }
+
+ button:focus {
+     box-shadow: 0 0 0 .2rem rgba(40,167,69,.5);
+ }
+
+
+.green {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
 }
 
-.input-item {
-    display: flex;
-    flex-direction: column;
-}

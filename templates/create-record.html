@@ -1,31 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href="/assets/main.css" rel="stylesheet"/>
-    <title>Create Record</title>
-</head>
-<body>
-<main >
-    <form class="create-layout" action="/handle-create" method="post">
-        <h1>New Record</h1>
-        <button type="submit">Create</button>
-        <ul>
-            <li class="input-item">
-                <label for="title" class="input-label">Title</label>
-                <input type="text" id="title" name="title" class="input-field"/>
-            </li>
-            <li class="input-item">
-                <label for="amount" class="input-label">Amount</label>
-                <input type="number" id="amount" name="amount" class="input-field"/>
-            </li>
-            <li class="input-item">
-                <label for="tag" class="input-label">Tag</label>
-                <input type="text" id="tag" name="tag" class="input-field"/>
-            </li>
-        </ul>
-    </form>
-</main>
+<style>
+    .create-record {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 1rem;
+    }
 
-</body>
-</html>
+    .input-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    form li + li {
+        margin-top: 1rem;
+    }
+
+</style>
+<form class="create-record" action="/handle-create" method="post">
+    <ul>
+        <li class="input-item">
+            <label for="title" class="input-label">Title</label>
+            <input type="text" id="title" name="title" class="input-field"/>
+        </li>
+        <li class="input-item">
+            <label for="amount" class="input-label">Amount</label>
+            <input type="number" id="amount" name="amount" class="input-field"/>
+        </li>
+        <li class="input-item">
+            <label for="tag" class="input-label">Tag</label>
+            <input type="text" id="tag" name="tag" class="input-field"/>
+        </li>
+    </ul>
+    <button class="green"
+            hx-post="/create"
+            hx-target="#record-list"
+            hx-swap="innerHTML"
+            type="submit">Add Record</button>
+</form>
