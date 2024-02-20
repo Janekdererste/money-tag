@@ -4,6 +4,7 @@
         display: grid;
         grid-template-columns: 1fr auto;
         grid-template-rows: auto auto;
+        gap: 0.1rem;
         padding: 0 1rem 1rem 1rem;
         border-bottom: solid 1px #dee3ed;
     }
@@ -11,11 +12,29 @@
     .list-item ~ .list-item {
         margin: 1rem 0 0 0;
     }
+
+    .record-primary {
+        font-weight: bold;
+    }
+    .record-secondary {
+        font-weight: lighter;
+    }
+
+    .record-amount {
+        text-align: end;
+    }
+
 </style>
 <ul id="record-list">
 {% for record in records %}
 <li class="list-item">
-    <span>{{record.title}}</span>
-    <span>{{record.amount}}€</span></li>
+    <span class="record-primary">{{record.title}}</span>
+    <span class="record-primary record-amount">{{record.amount}}€</span>
+    <span class="record-secondary">@{{record.owner}}</span>
+    <span class="record-secondary">{% for tag in record.tags %}
+            {{tag}},
+        {%endfor%}
+    </span>
+</li>
 {% endfor %}
 </ul>

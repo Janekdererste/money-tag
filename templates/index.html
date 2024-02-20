@@ -10,12 +10,17 @@
             grid-template-columns: 1fr auto;
             align-items: start;
             gap: 1rem;
+            max-width: 50rem;
+        }
+
+        .main-title {
+            padding: 0 2rem;
         }
     </style>
 </head>
 <body>
 <header>
-    <h1>The Expense List</h1>
+    <h1 class="main-title">The Expense List</h1>
 </header>
 <main class="main-layout">
     {% include "records.html" %}
