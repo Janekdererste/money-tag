@@ -2,6 +2,7 @@ use crate::logging::init_logging;
 use std::error::Error;
 
 use crate::data_models::Record;
+use crate::errors::AppError;
 use crate::store::MongoDB;
 use askama::Template;
 use askama_axum::IntoResponse;
@@ -18,6 +19,7 @@ use tower_http::trace::TraceLayer;
 use tracing::info;
 
 mod data_models;
+mod errors;
 mod logging;
 mod store;
 
@@ -53,21 +55,15 @@ async fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-async fn index<'a>(State(state): State<AppState>) -> impl IntoResponse {
-    match state.db.records("default").await {
-        Ok(records) => (StatusCode::OK, IndexTemplate { records }).into_response(),
-        Err(e) => (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            format!("something went wrong the error was {e} "),
-        )
-            .into_response(),
-    }
+async fn index<'a>(State(state): State<AppState>) -> Result<IndexTemplate, AppError> {
+    let records = state.db.records("default").await?;
+    Ok(IndexTemplate { records })
 }
 
 async fn create(
     State(state): State<AppState>,
     Form(data): Form<NewRecordForm>,
-) -> impl IntoResponse {
+) -> Result<RecordList, AppError> {
     // process the form. This should probably also have validation
     let regex = Regex::new(r"[,;]").unwrap(); // this doesn't have to be created each time i guess
     let tags: Vec<_> = regex
@@ -82,19 +78,10 @@ async fn create(
         amount: data.amount,
         tags,
     };
+    state.db.add_record(new_record).await?;
 
-    match state.db.add_record(new_record).await {
-        // return updated list in case of success
-        Ok(_) => {
-            let records = state.db.records("default").await.expect("Failed to load records from the database. Replace this with proper generic error handler");
-            (StatusCode::OK, RecordList { records }).into_response()
-        }
-        Err(e) => (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Database error: {e}"),
-        )
-            .into_response(),
-    }
+    let records = state.db.records("default").await?;
+    Ok(RecordList { records })
 }
 
 #[derive(Template)]
