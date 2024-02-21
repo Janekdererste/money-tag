@@ -16,7 +16,12 @@
     }
 
 </style>
-<form class="create-record" action="/handle-create" method="post">
+<script>
+    const clearForm = () => {
+        document.getElementById("create-record-form").reset();
+    }
+</script>
+<form id="create-record-form" class="create-record" action="/handle-create" method="post">
     <ul>
         <li class="input-item">
             <label for="title" class="input-label">Title</label>
@@ -35,5 +40,6 @@
             hx-post="/create"
             hx-target="#record-list"
             hx-swap="innerHTML"
+            onclick="clearForm()"
             type="submit">Add Record</button>
 </form>
