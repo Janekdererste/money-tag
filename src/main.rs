@@ -47,7 +47,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     info!("Setting up Listener on 0.0.0.0:3000");
     let listener = TcpListener::bind("0.0.0.0:3000").await.unwrap();
 
-    info!("🚀 Starting Server!");
+    info!("🚀 Starting to serve!");
     axum::serve(listener, router).await.unwrap();
 
     Ok(())

@@ -2,6 +2,7 @@ use crate::data_models::Record;
 use futures::TryStreamExt;
 use mongodb::bson::doc;
 use mongodb::{Client, Collection, Database};
+use tracing::info;
 
 #[derive(Debug, Clone)]
 pub struct MongoDB {
@@ -11,15 +12,18 @@ pub struct MongoDB {
 impl MongoDB {
     pub async fn new(db_usr: &str, db_secred: &str) -> Result<Self, mongodb::error::Error> {
         let conn_str = format!("mongodb+srv://{db_usr}:{db_secred}@testcluster.mkc0xla.mongodb.net/?retryWrites=true&w=majority");
+        info!("Establishing Database Connection.");
         let client = Client::with_uri_str(conn_str).await?;
 
         // Send a ping to confirm a successful connection
         // don't really, know whether this is something we should do, but otherwise we don't know
         // whether the credentials were right.
+        info!("Created Database Client. Sending Ping, to ensure connection to the Database.");
         client
             .database("moneytag")
             .run_command(doc! { "ping": 1 }, None)
             .await?;
+        info!("Ping was successfully. Database is available");
 
         Ok(MongoDB { client })
     }
