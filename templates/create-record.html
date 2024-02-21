@@ -17,8 +17,14 @@
 
 </style>
 <script>
-    const clearForm = () => {
-        document.getElementById("create-record-form").reset();
+
+    function clearForm(event) {
+        console.log("Some log statement");
+
+        if (event.detail.successful) {
+            console.log("Reseting form")
+            document.getElementById("create-record-form").reset();
+        }
     }
 </script>
 <form id="create-record-form" class="create-record" action="/handle-create" method="post">
@@ -40,6 +46,6 @@
             hx-post="/create"
             hx-target="#record-list"
             hx-swap="innerHTML"
-            onclick="clearForm()"
+            hx-on::after-request="clearForm(event)"
             type="submit">Add Record</button>
 </form>
